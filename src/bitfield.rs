@@ -1,5 +1,4 @@
-use std::cmp;
-use std::fmt;
+use std::{cmp, fmt, uint, u64, u32, u16, u8};
 
 ///////////////////////////////////////////////////////////////////////////////
 #[deriving(Show)]
@@ -136,7 +135,7 @@ impl BitField
             return Err(BitFieldError::InvalidIndex)
         }
 
-        if (stop_bit - start_bit + 1) > 64
+        if (stop_bit - start_bit + 1) > u64::BITS
         {
             return Err(BitFieldError::ExceededDataRange);
         }
@@ -197,6 +196,54 @@ impl BitField
     }
 
     ///////////////////////////////////////////////////////////////////////////
+    pub fn insert_uint(&mut self, value: uint, start_bit: uint, stop_bit: uint) ->
+                                                       Result<(), BitFieldError>
+    {
+        if (stop_bit - start_bit + 1) > uint::BITS
+        {
+            return Err(BitFieldError::ExceededDataRange);
+        }
+
+        self.insert_u64(value as u64, start_bit, stop_bit)
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    pub fn insert_u32(&mut self, value: u32, start_bit: uint, stop_bit: uint) ->
+                                                       Result<(), BitFieldError>
+    {
+        if (stop_bit - start_bit + 1) > u32::BITS
+        {
+            return Err(BitFieldError::ExceededDataRange);
+        }
+
+        self.insert_u64(value as u64, start_bit, stop_bit)
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    pub fn insert_u16(&mut self, value: u16, start_bit: uint, stop_bit: uint) ->
+                                                       Result<(), BitFieldError>
+    {
+        if (stop_bit - start_bit + 1) > u16::BITS
+        {
+            return Err(BitFieldError::ExceededDataRange);
+        }
+
+        self.insert_u64(value as u64, start_bit, stop_bit)
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    pub fn insert_u8(&mut self, value: u16, start_bit: uint, stop_bit: uint) ->
+                                                       Result<(), BitFieldError>
+    {
+        if (stop_bit - start_bit + 1) > u8::BITS
+        {
+            return Err(BitFieldError::ExceededDataRange);
+        }
+
+        self.insert_u64(value as u64, start_bit, stop_bit)
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
     /// Gets the value of the specified range of bits.
     pub fn retrieve_u64(&self, start_bit: uint, stop_bit: uint) ->
                                                      Result<u64, BitFieldError>
@@ -218,7 +265,7 @@ impl BitField
             return Err(BitFieldError::InvalidIndex)
         }
 
-        if (stop_bit - start_bit + 1) > 64
+        if (stop_bit - start_bit + 1) > u64::BITS
         {
             return Err(BitFieldError::ExceededDataRange);
         }
@@ -273,6 +320,74 @@ impl BitField
         }
         
         Ok(value)
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    pub fn retrieve_uint(&self, start_bit: uint, stop_bit: uint) ->
+                                                     Result<uint, BitFieldError>
+    {
+        if (stop_bit - start_bit + 1) > uint::BITS
+        {
+            return Err(BitFieldError::ExceededDataRange);
+        }
+        
+        match self.retrieve_u64(start_bit, stop_bit)
+        {
+            Ok(v) => Ok(v as uint),
+            Err(e) => Err(e)
+        }
+
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    pub fn retrieve_u32(&self, start_bit: uint, stop_bit: uint) ->
+                                                     Result<u32, BitFieldError>
+    {
+        if (stop_bit - start_bit + 1) > u32::BITS
+        {
+            return Err(BitFieldError::ExceededDataRange);
+        }
+        
+        match self.retrieve_u64(start_bit, stop_bit)
+        {
+            Ok(v) => Ok(v as u32),
+            Err(e) => Err(e)
+        }
+
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    pub fn retrieve_u16(&self, start_bit: uint, stop_bit: uint) ->
+                                                     Result<u16, BitFieldError>
+    {
+        if (stop_bit - start_bit + 1) > u16::BITS
+        {
+            return Err(BitFieldError::ExceededDataRange);
+        }
+        
+        match self.retrieve_u64(start_bit, stop_bit)
+        {
+            Ok(v) => Ok(v as u16),
+            Err(e) => Err(e)
+        }
+
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    pub fn retrieve_u8(&self, start_bit: uint, stop_bit: uint) ->
+                                                     Result<u8, BitFieldError>
+    {
+        if (stop_bit - start_bit + 1) > u8::BITS
+        {
+            return Err(BitFieldError::ExceededDataRange);
+        }
+        
+        match self.retrieve_u64(start_bit, stop_bit)
+        {
+            Ok(v) => Ok(v as u8),
+            Err(e) => Err(e)
+        }
+
     }
 
     ///////////////////////////////////////////////////////////////////////////

@@ -2,6 +2,16 @@ use std::cmp;
 use std::fmt;
 
 ///////////////////////////////////////////////////////////////////////////////
+#[deriving(Show)]
+pub enum BitFieldError
+{
+    InternalError,
+    InvalidIndex,
+    NegativeRange,
+    ExceededDataRange,
+}
+
+///////////////////////////////////////////////////////////////////////////////
 #[deriving(Clone,PartialEq)]
 pub struct BitField
 {
@@ -107,7 +117,7 @@ impl BitField
     /// if <b>value</b> = 6 (binary 0110), and <b>start_bit</b> = 5, and 
     /// <b>stop_bit</b> = 6, the <b>value</b> will be masked to 2 (binary 10).<p>
     pub fn insert_u64(&mut self, value: u64, start_bit: uint, stop_bit: uint) ->
-                                                       Result<(), &'static str>
+                                                       Result<(), BitFieldError>
     {
         // find out which byte range will be affected by the insert
         let start_byte = start_bit / 8;
@@ -115,7 +125,7 @@ impl BitField
 
         if start_bit > stop_bit
         {
-            return Err("Bit range can not be negative");
+            return Err(BitFieldError::NegativeRange);
         }
         
         // find the byte length for the data
@@ -123,12 +133,12 @@ impl BitField
         
         if self.len() <= stop_byte
         {
-            return Err("Bits are out of range for object")
+            return Err(BitFieldError::InvalidIndex)
         }
 
         if (stop_bit - start_bit + 1) > 64
         {
-            return Err("Bit range can only be up to 64 bits wide");
+            return Err(BitFieldError::ExceededDataRange);
         }
 
         // loop through the bytes to change the value of
@@ -189,7 +199,7 @@ impl BitField
     ///////////////////////////////////////////////////////////////////////////
     /// Gets the value of the specified range of bits.
     pub fn retrieve_u64(&self, start_bit: uint, stop_bit: uint) ->
-                                                      Result<u64, &'static str>
+                                                     Result<u64, BitFieldError>
     {
         // find out which byte range will be affected by the insert
         let start_byte = start_bit / 8;
@@ -197,7 +207,7 @@ impl BitField
 
         if start_bit > stop_bit
         {
-            return Err("Bit range can not be negative");
+            return Err(BitFieldError::NegativeRange);
         }
         
         // find the byte length for the data
@@ -205,12 +215,12 @@ impl BitField
         
         if self.len() <= stop_byte
         {
-            return Err("Bits are out of range for object")
+            return Err(BitFieldError::InvalidIndex)
         }
 
         if (stop_bit - start_bit + 1) > 64
         {
-            return Err("Bit range can only be up to 64 bits wide");
+            return Err(BitFieldError::ExceededDataRange);
         }
 
         let mut value = 0u64;

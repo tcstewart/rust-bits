@@ -1,0 +1,14 @@
+[package]
+name = "bits"
+version = "0.0.1"
+authors = [ "tcstewart@users.noreply.github.com" ]
+
+[lib]
+name = "bits"
+path = "src/lib.rs"
+crate_type = ["rlib"]
+
+[[bin]]
+name = "bitfield_tester"
+path = "src/bitfield_tester.rs"
+

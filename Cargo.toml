@@ -2,13 +2,12 @@
 name = "bits"
 version = "0.0.1"
 authors = [ "tcstewart@users.noreply.github.com" ]
+readme = "README.md"
+license = "MIT"
+repository = "https://github.com/tcstewart/rust-bits.git"
 
 [lib]
 name = "bits"
 path = "src/lib.rs"
-crate_type = ["rlib"]
 
-[[bin]]
-name = "bitfield_tester"
-path = "src/bitfield_tester.rs"
 
